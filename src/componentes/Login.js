@@ -1,13 +1,22 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect} from 'react'
+import useAuth from '../hooks/useAuth';
+import { Link, useNavigate } from 'react-router-dom';
+
+
+import axios from '../api/axios';
+const LOGIN_URL ='/usuarios/login';
 
 const Login = () => {
+    const { setAuth } = useAuth();
+
+    const navigate = useNavigate(); 
+
     const usuarioRef = useRef();
     const errRef = useRef();
 
     const [usuario, setUsuario] = useState('');
     const [clave, setClave] = useState('');
     const [errMensaje, setErrMensaje] = useState('');
-    const [Ingreso, setIngreso] = useState(false);
 
     useEffect(() => {
         usuarioRef.current.focus();
@@ -19,17 +28,42 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(usuario, clave);
-        setUsuario('');
-        setClave('');
-        setIngreso(true);
+    
+        try{
+            const response = await axios.post(LOGIN_URL, 
+                JSON.stringify({usuario, clave}),
+                {
+                    headers: {'Content-Type': 'application/json'}
+                }
+            ); 
+            const accessToken = response?.data?.token;
+            const roles = response?.data?.usuario?.rol;
+            setAuth({usuario, clave, roles, accessToken});
+            setUsuario('');
+            setClave('');
+            navigate("/admin", {replace: true});
+        } catch (err){
+            console.log('Error:', err);
+            if(!err?.response){
+                setErrMensaje('Sin respuesta del servidor');
+            } else if (err.response?.status === 400) {
+                setErrMensaje('Solicitud incorrecta');
+            } else if (err.response?.status === 401 || err.response?.status === 403) {
+                setErrMensaje('Usuario o contraseña no valida');
+            }else {
+                setErrMensaje('Falló el inicio de sesión')
+            }
+            errRef.current.focus();
+
+        }
+       
     }
 
-    return (
+    return (    
         <section className='bg-gray-50 dark:bg-gray-900'>
             <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
             <div className='w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0'>
-            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <p ref={errRef} className={errMensaje ? "text-red-500" : "hidden"} aria-live="assertive">{errMensaje}</p>
             <h1 className=' text-2xl text-center font-bold leading-tight tracking-tight text-gray-600'>Ingresa a tu cuenta</h1>
             <form className='space-y-4 md:space-y-6' onSubmit={handleSubmit}>

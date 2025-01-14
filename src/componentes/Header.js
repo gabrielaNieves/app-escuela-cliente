@@ -11,7 +11,7 @@ const Header = () => {
       <div className='px-6 pl-4'>
       <div className='flex items-center '>
         <div className='flex '>
-          <span className='md-24 text-xl text-white font-semibold px-3 py-2'>
+          <span className='md-24 text-medium text-white font-semibold px-3 py-2'>
               {auth?.usuario}
           </span>
         <button className='text-3xl text-white' >

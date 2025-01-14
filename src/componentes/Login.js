@@ -3,7 +3,7 @@ import useAuth from '../hooks/useAuth';
 import { Link, useNavigate } from 'react-router-dom';
 
 
-import axios from '../api/axios';
+import api from '../api/axios';
 const LOGIN_URL ='/usuarios/login';
 
 const Login = () => {
@@ -30,11 +30,8 @@ const Login = () => {
         e.preventDefault();
     
         try{
-            const response = await axios.post(LOGIN_URL, 
-                JSON.stringify({usuario, clave}),
-                {
-                    headers: {'Content-Type': 'application/json'}
-                }
+            const response = await api.post(LOGIN_URL, 
+                JSON.stringify({usuario, clave})
             ); 
             const accessToken = response?.data?.token;
             const roles = response?.data?.usuario?.rol;

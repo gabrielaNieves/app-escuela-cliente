@@ -5,7 +5,7 @@ import Header from '../componentes/Header'
 
 const Panel = ({children}) => {
   return (
-    <div className='w-[84%] bg-gray-100'>
+    <div className='w-full'>
     <Header/>
     {children}
    </div>

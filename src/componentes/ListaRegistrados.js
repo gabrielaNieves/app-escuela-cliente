@@ -17,7 +17,6 @@ const ListaRegistrados = () => {
       }
     }
     fetchRegistrados();
-    console.log(totalUsuarios);
   }, []);
 
    const handleDelete = async (id) => {

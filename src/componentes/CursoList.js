@@ -36,7 +36,8 @@ const CursoList = () => {
           <thead
             className="border-b border-neutral-200 font-medium dark:border-white/10">
             <tr>
-            <th scope="col" className="px-6 py-4">Titulo</th>
+            <th scope="col" className="px-6 py-4">Grado</th>
+            <th scope="col" className="px-6 py-4">seccion</th>
               <th scope="col" className="px-6 py-4">Docente</th>
             </tr>
           </thead>
@@ -44,7 +45,8 @@ const CursoList = () => {
           {cursos.map((curso) => (
             <tr
             key={curso.id} className="border-b border-neutral-200 transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-white/10 dark:hover:bg-neutral-600">
-              <td className="whitespace-nowrap px-6 py-4 font-medium">{curso.titulo}</td>
+              <td className="whitespace-nowrap px-6 py-4 font-medium">{curso.grado}° grado</td>
+              <td className="whitespace-nowrap px-6 py-4 font-medium">{curso.seccion}</td>
               <td className="whitespace-nowrap px-6 py-4">{curso.Docente.nombre + ' ' + curso.Docente.apellido}</td>
               <Link to={`edicion/${curso.id}`}>
               <button className='px-4 py-4 hover:bg-blue-200'><RiEditLine className='h-5 w-5'/></button>

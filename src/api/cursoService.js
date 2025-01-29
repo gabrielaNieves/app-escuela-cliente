@@ -12,7 +12,11 @@ export const getCursos = async () => {
     const response = await api.get(`/cursos/${id}`);
     return response.data;
   };
-  
+  // Obtener proxima sección
+  export const proximaSeccion = async (grado) => {
+    const response = await api.get(`/cursos/proxima-seccion?grado=${grado}`);
+    return response.data;
+  };
   // Crear un curso
   export const createCurso = async (cursoData) => {
     const response = await api.post('/cursos', cursoData);

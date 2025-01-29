@@ -7,6 +7,11 @@ export const obtenerUsuarios = async () => {
     return response.data
 }
 
+export const crearUsuarios = async (usuario) => {
+    const response = await api.post('/usuarios/registro', usuario);
+    return response.data
+}
+
 export const eliminarUsuario = async (id) => {
     await api.delete(`/usuarios/${id}`);
 }

@@ -30,7 +30,7 @@ const listaMenu = [
 
   },
   {
-    titulo: 'Clases',
+    titulo: 'Secciones',
     icono:<PiChalkboardSimple className='h-6 w-6'/>,
     href:'cursos'
 

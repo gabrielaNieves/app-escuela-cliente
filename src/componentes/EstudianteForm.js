@@ -14,7 +14,7 @@ const EstudianteForm = () => {
     nacionalidad: '',
     fechaDeNacimiento: '',
     lugarDeNacimiento: '',
-    Padres: [{ id: null, nombre: '', apellido: '', cedula: 0, fechaDeNacimiento: '', estadoCivil: '', profesion: '', direccion: '', relacion: null }],
+    Padres: [{ id: null, nombre: '', apellido: '', cedula: '', fechaDeNacimiento: '', estadoCivil: '', profesion: '', direccion: '', telefono: '', relacion: null }],
   });
 
 
@@ -100,7 +100,7 @@ const EstudianteForm = () => {
         <div className='flex space-x-6 mb-4'>
           <input
           className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
-            type="number"
+            type="text"
             name="cedula"
             value={formData.cedula}
             onChange={handleChange}
@@ -118,19 +118,23 @@ const EstudianteForm = () => {
             <option disabled>Género</option>
             <option value="Masculino">Masculino</option>
             <option value="Femenino">Femenino</option>
+            <option value="Otros">Otros</option>
           </select>
 
         </div>
         <div className='flex space-x-6 mb-4'>
-        <input
-        className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
-          type="text"
-          name="nacionalidad"
-          value={formData.nacionalidad}
-          onChange={handleChange}
-          placeholder="Nacionalidad del estudiante"
-          required
-        />
+        <select
+            className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
+            name="nacionalidad"
+            value={formData.nacionalidad}
+            onChange={handleChange}
+            placeholder="Nacionalidad del estudiante"
+            required
+          >
+            <option disabled>Nacionalidad</option>
+            <option value="Venezolana">Venezolana</option>
+            <option value="Extranjera">Extranjera</option>
+          </select>
         <label className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex justify-between items-center space-x-4 w-1/2 pl-2'>
           Fecha de Nacimiento:
           <input
@@ -183,7 +187,7 @@ const EstudianteForm = () => {
             <div className='flex space-x-6 mb-4'>
             <input
               className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
-              type="number"
+              type="text"
               name="cedula"
               value={padre.cedula}
               onChange={(e) => handleParentChange(index, e)}
@@ -204,14 +208,23 @@ const EstudianteForm = () => {
             </label>
             </div>
             <div className='flex space-x-6 mb-4'>
-            <input
-              className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
-              type="text"
-              name="estadoCivil"
-              value={padre.estadoCivil}
-              onChange={(e) => handleParentChange(index, e)}
-              placeholder="Estado Civil"
-            />
+            <label className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex justify-between items-center space-x-4 w-1/2 pl-2'>
+              Estado Civil
+              <select
+                className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 w-[65%] h-[100%] self-center p-1'
+                name="estadoCivil"
+                defaultValue={padre.estadoCivil}
+                onChange={(e) => handleParentChange(index, e)}
+                placeholder="Estado Civil"
+                required
+              >
+                <option disabled>Estado Civil </option>
+                <option value="Soltero">Soltero</option>
+                <option value="Casado">Casado</option>
+                <option value="Viudo">Viudo</option>
+                <option value="Divorciado">Divorciado</option>
+              </select>
+            </label>
             <input
               className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
               type="text"
@@ -219,6 +232,7 @@ const EstudianteForm = () => {
               value={padre.profesion}
               onChange={(e) => handleParentChange(index, e)}
               placeholder="Profesión del padre"
+              required
             />
             </div>
             <div className='flex space-x-6 mb-4'>
@@ -229,6 +243,18 @@ const EstudianteForm = () => {
               value={padre.direccion}
               onChange={(e) => handleParentChange(index, e)}
               placeholder="Dirección del padre"
+              required
+            />
+            <input
+              className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
+              type="tel"
+              name="telefono"
+              value={padre.telefono}
+              onChange={(e) => handleParentChange(index, e)}
+              placeholder="Telefono"
+              minLength="9"
+              maxLength="12"
+              required
             />
             <label className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex justify-between items-center space-x-4 w-1/2 pl-2'>
               Relación con el Estudiante

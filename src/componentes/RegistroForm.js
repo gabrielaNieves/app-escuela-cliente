@@ -35,7 +35,7 @@ const RegistroForm = ({ onSave }) => {
             });
 
             setError(null);
-            alert('Colaborador registrado con éxito');
+            alert(formData.rolId === '1'? 'Administrador registrado con éxito': 'Colaborador registrado con éxito');
             setFormData({
                 nombre: '',
                 apellido: '',

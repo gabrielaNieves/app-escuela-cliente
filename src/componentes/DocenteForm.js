@@ -73,7 +73,7 @@ const DocenteForm = () => {
       <div className='flex space-x-6 mb-4'>
         <input
         className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
-          type="number"
+          type="text"
           name="cedula"
           value={formData.cedula}
           onChange={handleChange}
@@ -82,11 +82,13 @@ const DocenteForm = () => {
         />
         <input
         className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
-          type="text"
+          type="tel"
           name="telefono"
           value={formData.telefono}
           onChange={handleChange}
           placeholder="Telefono"
+          minLength="9"
+          maxLength="14"
           required
         />
 

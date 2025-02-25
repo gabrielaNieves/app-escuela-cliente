@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
 import { createDocente, updateDocente, getDocenteById } from '../api/docenteService';
+import { docenteSchema } from '../schema/DocenteSchema';
 
 const DocenteForm = () => {
   const { id } = useParams(); // Obtiene el ID de la URL
@@ -14,14 +15,13 @@ const DocenteForm = () => {
     titulo:'',
     })
 
-    const [error, setError] = useState(''); // Para mostrar mensajes de error
+    const [errors, setErrors] = useState(''); // Para mostrar mensajes de error
     
 
     useEffect(() => {
       if (id) {
         const fetchDocente = async () => {
           const data = await getDocenteById(id);
-          console.log(data)
           setFormData(data);
         };
         fetchDocente();
@@ -37,14 +37,33 @@ const DocenteForm = () => {
   // Manejar envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (id) {
-      await updateDocente(id, formData);
-    } else {
-      await createDocente(formData);
-    }
-    navigate('/admin/docentes')
+    try {
+      // Validar el formulario antes de enviarlo
+      await docenteSchema.validate(formData, { abortEarly: false });
+  
+      if (id) {
+        await updateDocente(id, formData);
+      } else {
+        await createDocente(formData);
+      }
+  
+      // Si todo sale bien, limpiar errores y navegar
+      setErrors({});
+      navigate('/admin/docentes');
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        const newErrors = {};
+        error.inner.forEach(err => {
+          newErrors[err.path] = err.message;
+        });
+        return setErrors(newErrors); 
+      }
+  
+      // Manejar errores del backend o conexión
+      setErrors(error.response?.data?.message ? { server: error.response.data.message } : { server: 'Error de servidor' });
   };
-
+  }
+  
   return (
     <div className='flex flex-col items-center justify-center'>
     <h2 className='text-[20px] font-bold mb-6 text-center'>Registro Docente</h2>
@@ -58,8 +77,8 @@ const DocenteForm = () => {
           value={formData.nombre}
           onChange={handleChange}
           placeholder="Nombre del Docente"
-          required
         />
+        {errors?.nombre && <p className="text-red-500">{errors.nombre}</p>}
         <input
           className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
           type="text"
@@ -67,8 +86,8 @@ const DocenteForm = () => {
           value={formData.apellido}
           onChange={handleChange}
           placeholder="Apellido del Docente"
-          required
         />
+        {errors?.apellido && <p className="text-red-500">{errors.apellido}</p>}
       </div>
       <div className='flex space-x-6 mb-4'>
         <input
@@ -78,8 +97,8 @@ const DocenteForm = () => {
           value={formData.cedula}
           onChange={handleChange}
           placeholder="Cedula del Docente"
-          required
         />
+        {errors?.cedula && <p className="text-red-500">{errors.cedula}</p>}
         <input
         className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
           type="tel"
@@ -89,9 +108,8 @@ const DocenteForm = () => {
           placeholder="Telefono"
           minLength="9"
           maxLength="14"
-          required
         />
-
+        {errors?.telefono && <p className="text-red-500">{errors.telefono}</p>}
       </div>
       <div className='flex space-x-6 mb-4'>
       <input
@@ -101,8 +119,8 @@ const DocenteForm = () => {
         value={formData.direccion}
         onChange={handleChange}
         placeholder="Dirección"
-        required
       />
+      {errors?.direccion && <p className="text-red-500">{errors.direccion}</p>}
       <input
       className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
         type="text"
@@ -110,11 +128,12 @@ const DocenteForm = () => {
         value={formData.titulo}
         onChange={handleChange}
         placeholder="Título"
-        required
       />
+      {errors?.titulo && <p className="text-red-500">{errors.titulo}</p>}
       </div>
       
       <br />
+        {errors?.server && <p className="text-red-500">⚠️ {errors.server}</p>}
       <button className='text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-8 py-2.5 text-center' type="submit">Guardar</button>
 
     </form>

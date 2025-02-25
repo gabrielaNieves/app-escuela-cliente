@@ -1,17 +1,19 @@
 import { useState } from 'react'
 import { crearUsuarios } from '../api/usuarioService';
+import { registroSchema } from '../schema/formSchema';
 
 const RegistroForm = ({ onSave }) => {
+
     const [formData, setFormData] = useState({
         nombre: '',
         apellido: '',
         usuario: '',
         clave: '',
         confirmarClave: '',
-        rolId: '1', // Opcional, dependiendo de los roles
+        rolId: '',
     });
 
-    const [error, setError] = useState(null);
+    const [errors, setErrors] = useState(null);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,13 +21,12 @@ const RegistroForm = ({ onSave }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (formData.clave !== formData.confirmarClave) {
-            setError('Las contraseñas no coinciden');
-            return;
-        }
+        setErrors(null);
 
         try {
+            // Validar el formulario con Yup
+            await registroSchema.validate(formData, { abortEarly: false });
+
             await crearUsuarios({
                 nombre: formData.nombre,
                 apellido: formData.apellido,
@@ -34,18 +35,29 @@ const RegistroForm = ({ onSave }) => {
                 rolId: formData.rolId,
             });
 
-            setError(null);
-            alert(formData.rolId === '1'? 'Administrador registrado con éxito': 'Colaborador registrado con éxito');
+            alert(formData.rolId === '1' ? 'Administrador registrado con éxito' : 'Colaborador registrado con éxito');
+
             setFormData({
                 nombre: '',
                 apellido: '',
                 usuario: '',
                 clave: '',
                 confirmarClave: '',
-                rolId: '1',
+                rolId: '',
             });
-        } catch (err) {
-            setError(err.response?.data?.message || 'Error al registrar colaborador');
+
+        } catch (error) {
+            if (error.name === 'ValidationError') {
+                const newError = {};
+                error.inner.forEach(err => {
+                    newError[err.path] = err.message;
+                });
+                console.log(newError)
+                return setErrors(newError); // Errores de validación
+            }
+
+            // Si el error proviene del backend o de la conexión
+            setErrors(error.response?.data?.message || 'Ocurrió un error al registrar el usuario');
         }
     };
 
@@ -56,7 +68,6 @@ const RegistroForm = ({ onSave }) => {
                     <div className="p-2 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className=' text-2xl text-center font-bold leading-tight tracking-tight text-gray-600'>Registro de Usuarios</h1>
                         <form className='space-y-4 md:space-y-6' onSubmit={handleSubmit}>
-                            {error && <p className="text-red-500">{error}</p>}
                             <div className='flex space-x-6 mb-4'>
                                 <div>
                                     <label className='block mb-2 text-sm font-medium text-gray-900' htmlFor="nombre">Nombre:</label>
@@ -66,8 +77,8 @@ const RegistroForm = ({ onSave }) => {
                                         name="nombre"
                                         value={formData.nombre}
                                         onChange={handleChange}
-                                        required
                                     />
+                                    {errors?.nombre && <p className="text-red-500">{errors.nombre}</p>}
                                 </div>
                                 <div>
                                     <label className='block mb-2 text-sm font-medium text-gray-900' htmlFor="apellido">Apellido:</label>
@@ -77,8 +88,8 @@ const RegistroForm = ({ onSave }) => {
                                         name="apellido"
                                         value={formData.apellido}
                                         onChange={handleChange}
-                                        required
                                     />
+                                    {errors?.apellido && <p className="text-red-500">{errors.apellido}</p>}
                                 </div>
                             </div>
                             <div>
@@ -89,8 +100,8 @@ const RegistroForm = ({ onSave }) => {
                                     name="usuario"
                                     value={formData.usuario}
                                     onChange={handleChange}
-                                    required
                                 />
+                                {errors?.usuario && <p className="text-red-500">{errors.usuario}</p>}
                             </div>
                             <div className='flex space-x-6 mb-4'>
                                 <div>
@@ -101,8 +112,8 @@ const RegistroForm = ({ onSave }) => {
                                         name="clave"
                                         value={formData.clave}
                                         onChange={handleChange}
-                                        required
                                     />
+                                    {errors?.clave && <p className="text-red-500">{errors.clave}</p>}
                                 </div>
                                 <div>
                                     <label className='block mb-2 text-sm font-medium text-gray-900' htmlFor="confirmarClave">Confirmar Contraseña:</label>
@@ -112,8 +123,8 @@ const RegistroForm = ({ onSave }) => {
                                         name="confirmarClave"
                                         value={formData.confirmarClave}
                                         onChange={handleChange}
-                                        required
                                     />
+                                    {errors?.confirmarClave && <p className="text-red-500">{errors.confirmarClave}</p>}
                                 </div>
                             </div>
                             <div>
@@ -123,7 +134,11 @@ const RegistroForm = ({ onSave }) => {
                                     <option value='1'>Administrador</option>
                                     <option value='2'>Colaborador</option>
                                 </select>
+                                {errors?.rolId && <p className="text-red-500">{errors.rolId}</p>}
                             </div>
+                            {errors && typeof errors === 'string' && (
+                                <p className="text-red-500">⚠️ {errors}</p>
+                            )}
                             <button className='w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center' type="submit">Registrar</button>
                         </form>
                     </div>

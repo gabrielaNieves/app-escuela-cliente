@@ -21,5 +21,5 @@ export const estudianteSchema = yup.object().shape({
       telefono: yup.string().matches(/^\d{9,14}$/, 'Formato telefono inválido').required('Este campo es obligatorio'),
       relacion: yup.string().oneOf(['Madre', 'Padre', 'Representante'], 'Relación no válida').required('Este campo es obligatorio'),
     })
-  ),
+  )
 });

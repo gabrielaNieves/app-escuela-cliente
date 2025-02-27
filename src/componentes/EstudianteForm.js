@@ -49,7 +49,7 @@ const EstudianteForm = () => {
       };
       fetchEstudiante();
     }
-  }, [id]);
+  }, [id, errors]);
 
   // Manejar cambios en los campos del estudiante
   const handleChange = (e) => {
@@ -92,7 +92,7 @@ const EstudianteForm = () => {
     e.preventDefault();
     setErrors({}); // Limpiar errores anteriores
     try {
-      
+
       await estudianteSchema.validate(formData, { abortEarly: false }); //Validación
 
       if (id) {
@@ -104,6 +104,7 @@ const EstudianteForm = () => {
       navigate('/admin/alumnos'); // Redirigir a la lista de estudiantes
     } catch (error) {
       if (error.name === 'ValidationError') {
+        console.log(error.inner)
         const newErrors = {};
         error.inner.forEach(err => {
           newErrors[err.path] = err.message;
@@ -199,7 +200,7 @@ const EstudianteForm = () => {
           placeholder="Lugar de Nacimiento"
         />
         {errors?.lugarDeNacimiento && <p className="text-red-500">{errors.lugarDeNacimiento}</p>}
-        
+
         {/* Datos de los Padres */}
         <h3 className='my-2'>Información de los Padres (Máximo 2)</h3>
         {formData.Padres.map((padre, index) => (
@@ -208,6 +209,7 @@ const EstudianteForm = () => {
             style={{ marginBottom: '1em', border: '1px solid #ccc', padding: '1em' }}
           >
             {padre.id && <input type="hidden" name="id" value={padre.id} />}
+
             <div className='flex space-x-6 mb-4'>
               <input
                 className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
@@ -217,8 +219,8 @@ const EstudianteForm = () => {
                 onChange={(e) => handleParentChange(index, e)}
                 placeholder="Nombre del padre"
               />
-              {errors.Padres && errors.Padres[index] && errors.Padres[index].nombre && (
-                <p className="text-red-500">{errors.Padres[index].nombre}</p>
+              {errors[`Padres[${index}].nombre`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].nombre`]}</p>
               )}
               <input
                 className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
@@ -228,8 +230,8 @@ const EstudianteForm = () => {
                 onChange={(e) => handleParentChange(index, e)}
                 placeholder="Apellido del padre"
               />
-              {errors.Padres && errors.Padres[index] &&  errors.Padres[index].apellido && (
-                <p className="text-red-500">{errors.Padres[index].apellido}</p>
+              {errors[`Padres[${index}].apellido`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].apellido`]}</p>
               )}
             </div>
             <div className='flex space-x-6 mb-4'>
@@ -241,8 +243,8 @@ const EstudianteForm = () => {
                 onChange={(e) => handleParentChange(index, e)}
                 placeholder="Cédula del padre"
               />
-              {errors?.Padres?.[index].cedula && (
-                <p className="text-red-500">{errors.Padres[index].cedula}</p>
+              {errors[`Padres[${index}].cedula`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].cedula`]}</p>
               )}
               <label className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex justify-between items-center space-x-4 w-1/2 pl-2'>
                 Fecha de Nacimiento:
@@ -256,8 +258,8 @@ const EstudianteForm = () => {
                   placeholder="Fecha de Nacimiento"
                 />
               </label>
-              {errors?.Padres?.[index].fechaDeNacimiento && (
-                <p className="text-red-500">{errors.Padres[index].fechaDeNacimiento}</p>
+              {errors[`Padres[${index}].fechaDeNacimiento`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].fechaDeNacimiento`]}</p>
               )}
             </div>
             <div className='flex space-x-6 mb-4'>
@@ -276,8 +278,8 @@ const EstudianteForm = () => {
                   <option value="Divorciado">Divorciado</option>
                 </select>
               </label>
-              {errors?.Padres?.[index].estadoCivil && (
-                <p className="text-red-500">{errors.Padres[index].estadoCivil}</p>
+              {errors[`Padres[${index}].estadoCivil`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].estadoCivil`]}</p>
               )}
               <input
                 className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
@@ -287,8 +289,8 @@ const EstudianteForm = () => {
                 onChange={(e) => handleParentChange(index, e)}
                 placeholder="Profesión del padre"
               />
-              {errors?.Padres?.[index].profesion && (
-                <p className="text-red-500">{errors.Padres[index].profesion}</p>
+              {errors[`Padres[${index}].profesion`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].profesion`]}</p>
               )}
             </div>
             <div className='flex space-x-6 mb-4'>
@@ -300,8 +302,8 @@ const EstudianteForm = () => {
                 onChange={(e) => handleParentChange(index, e)}
                 placeholder="Dirección del padre"
               />
-              {errors?.Padres?.[index].direccion && (
-                <p className="text-red-500">{errors.Padres[index].direccion}</p>
+              {errors[`Padres[${index}].direccion`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].direccion`]}</p>
               )}
               <input
                 className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-1/2 p-2'
@@ -311,8 +313,8 @@ const EstudianteForm = () => {
                 onChange={(e) => handleParentChange(index, e)}
                 placeholder="Teléfono"
               />
-              {errors?.Padres?.[index].telefono && (
-                <p className="text-red-500">{errors.Padres[index].telefono}</p>
+                {errors[`Padres[${index}].telefono`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].telefono`]}</p>
               )}
               <label className='border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 flex justify-between items-center space-x-4 w-1/2 pl-2'>
                 Relación con el Estudiante
@@ -328,8 +330,8 @@ const EstudianteForm = () => {
                   <option value="Representante">Representante</option>
                 </select>
               </label>
-              {errors?.Padres?.[index].relacion && (
-                <p className="text-red-500">{errors.Padres[index].relacion}</p>
+              {errors[`Padres[${index}].relacion`] && (
+                <p className="text-red-500">{errors[`Padres[${index}].relacion`]}</p>
               )}
             </div>
             <button

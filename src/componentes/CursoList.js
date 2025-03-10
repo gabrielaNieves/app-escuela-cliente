@@ -26,7 +26,7 @@ const CursoList = () => {
     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
       <div className="overflow-hidden  border border-gray-200 shadow rounded-lg bg-white ">
       <div className='flex flex-row justify-between'>
-        <h1 className='text-lg font-semibold pl-3 my-2'>Cursos</h1>
+        <h1 className='text-lg font-semibold pl-3 my-2'>Secciones</h1>
         <Link to="crear" className='m-1'>
         <button className='font-medium rounded-lg text-sm px-2 py-2 m-auto text-center text-blue-600  hover:bg-blue-200 focus:ring-4 focus:outline-none focus:ring-primary-300  '>Nuevo Curso</button>
         </Link>

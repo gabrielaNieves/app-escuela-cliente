@@ -4,6 +4,7 @@ import { RiEditLine } from "react-icons/ri";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { buscarInscripciones, eliminarInscripcion } from '../api/inscripcionService';
 import { getCursos } from '../api/cursoService';
+import ConstanciasMenu from './ConstanciasMenu';
 
 const InscripcionesList = () => {
     const [inscripciones, setInscripciones] = useState([]);
@@ -116,6 +117,7 @@ const InscripcionesList = () => {
               <button className='px-4 py-4 hover:bg-blue-200'><RiEditLine className='h-5 w-5'/></button>
               </Link>
                 <button className='px-4 py-4 hover:bg-blue-200' onClick={() => handleDelete(inscripcion.id)}><RiDeleteBin6Fill className='h-5 w-5'/></button>
+              <ConstanciasMenu/>
             </tr>
             ))}
           </tbody>

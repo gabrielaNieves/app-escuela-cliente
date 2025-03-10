@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiEditLine } from "react-icons/ri";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import { GrDocumentPdf } from "react-icons/gr";
-import { MdOutlineDownloading } from "react-icons/md";
 import { getEstudiantes, deleteEstudiante } from '../api/estudianteService';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import Constancia from '../reportes/Constancia';
 
 const EstudianteList = ({ onEdit }) => {
   const [estudiantes, setEstudiantes] = useState([]);
@@ -63,10 +59,6 @@ const EstudianteList = ({ onEdit }) => {
               <td className="whitespace-nowrap px-4 py-4">{estudiante.fechaDeNacimiento}</td>
               <td className="whitespace-nowrap px-4 py-4">{estudiante.lugarDeNacimiento}</td>
               <td className="whitespace-nowrap px-4 py-4">
-              <PDFDownloadLink document={<Constancia/>} fileName='Constancia_Estudio.pdf'>
-                  {({loading}) => 
-                    loading ? <button className='px-4 py-4 hover:bg-blue-200'><MdOutlineDownloading className='h-5 w-5 '/> </button>: <button><GrDocumentPdf className='h-5 w-5 '/></button> }
-              </PDFDownloadLink>
               <Link to={`edicion/${estudiante.id}`}>
               <button className='px-4 py-4 hover:bg-blue-200'><RiEditLine className='h-5 w-5'/></button>
               </Link>

@@ -102,7 +102,7 @@ const [errors, setErrors] = useState(''); // Para mostrar mensajes de error
         <option value="">Seleccionar...</option>
         {cursos.map(curso => (
           <option key={curso.id} value={curso.id}>
-            {curso.titulo}
+            {curso.grado} {curso.seccion}
           </option>
         ))}
       </select>

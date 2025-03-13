@@ -50,7 +50,7 @@ const Inscripciones = () => {
               <tr
               key={inscripcion.id} className="border-b border-neutral-200 transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-white/10 dark:hover:bg-neutral-600">
                 <td className="whitespace-nowrap px-6 py-4 font-medium">{inscripcion.Estudiante.nombre} {inscripcion.Estudiante.apellido}</td>
-                <td className="whitespace-nowrap px-6 py-4">{inscripcion.Curso.titulo}</td>
+                <td className="whitespace-nowrap px-6 py-4">{inscripcion.Curso.grado} {inscripcion.Curso.seccion}</td>
                 <td className="whitespace-nowrap px-6 py-4">{inscripcion.fechaInscripcion}</td>
                 <td className="whitespace-nowrap px-6 py-4">{inscripcion.Estudiante.genero}</td>
                 <td className="whitespace-nowrap px-6 py-4"><div className={`${inscripcion?.estado === 'Activo' ? 'rounded-md py-1 px-auto bg-green-500 bg-opacity-40 text-green-800 text-center font-normal' : 'rounded-md py-1 px-auto bg-red-500 bg-opacity-40 text-red-800 text-center font-normal'} `}>{inscripcion.estado}</div>

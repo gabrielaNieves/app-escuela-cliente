@@ -7,9 +7,9 @@ import { estudianteSchema } from '../schema/estudianteSchema';
 // Objeto base para la información de un padre
 const initialParentData = {
   id: null,
+  cedula: '',
   nombre: '',
   apellido: '',
-  cedula: '',
   fechaDeNacimiento: '',
   estadoCivil: '',
   profesion: '',
@@ -19,24 +19,23 @@ const initialParentData = {
 };
 
 const EstudianteForm = () => {
-  const { id } = useParams(); // Obtiene el ID de la URL
-  const navigate = useNavigate(); // Permite redirigir
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Inicializamos el formData y el estado de errores como objetos
   const [formData, setFormData] = useState({
+    Padres: [initialParentData],
+    cedula: '',
     nombre: '',
     apellido: '',
-    cedula: '',
+    fechaDeNacimiento: '',
     genero: '',
     nacionalidad: '',
-    fechaDeNacimiento: '',
-    lugarDeNacimiento: '',
-    Padres: [initialParentData]
+    lugarDeNacimiento: ''
   });
 
   const [errors, setErrors] = useState({});
+  const [cedulaEscolarMsg, setCedulaEscolarMsg] = useState('');
 
-  // Si se recibe un id, se carga el estudiante
   useEffect(() => {
     if (id) {
       const fetchEstudiante = async () => {
@@ -49,14 +48,32 @@ const EstudianteForm = () => {
       };
       fetchEstudiante();
     }
-  }, [id, errors]);
+  }, [id]);
 
-  // Manejar cambios en los campos del estudiante
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "fechaDeNacimiento") {
+      const fecha = new Date(value);
+      const hoy = new Date();
+      const edad = hoy.getFullYear() - fecha.getFullYear();
+      const resultado = hoy.getMonth() - fecha.getMonth();
+
+      if (resultado < 0 || (resultado === 0 && hoy.getDate() < fecha.getDate())) {
+        edad--;
+      }
+
+      if (edad < 7 || edad > 15) {
+        setErrors({ ...errors, fechaDeNacimiento: "La edad debe estar entre 7 y 15 años." });
+      } else {
+        setErrors({ ...errors, fechaDeNacimiento: "" });
+      }
+
+    }
+
+    setFormData({ ...formData, [name]: value });
   };
 
-  // Manejar cambios en los campos de un padre específico usando map
   const handleParentChange = (index, e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -67,7 +84,6 @@ const EstudianteForm = () => {
     }));
   };
 
-  // Agregar un nuevo padre al arreglo
   const addParent = () => {
     if (formData.Padres.length >= 2) {
       setErrors({ padre: 'Solo puedes agregar hasta 2 Padres por estudiante.' });
@@ -80,40 +96,34 @@ const EstudianteForm = () => {
     setErrors({});
   };
 
-  // Eliminar un padre del arreglo
   const removeParent = (index) => {
     const updatedParents = formData.Padres.filter((_, i) => i !== index);
     setFormData({ ...formData, Padres: updatedParents });
     setErrors({});
   };
 
-  // Manejar envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); // Limpiar errores anteriores
+    setErrors({});
     try {
-
-      await estudianteSchema.validate(formData, { abortEarly: false }); //Validación
+      await estudianteSchema.validate(formData, { abortEarly: false });
 
       if (id) {
-        await updateEstudiante(id, formData); // Actualizar
+        await updateEstudiante(id, formData);
       } else {
-        await createEstudiante(formData); // Crear nuevo
+        await createEstudiante(formData);
       }
 
-      navigate('/admin/alumnos'); // Redirigir a la lista de estudiantes
+      navigate('/admin/alumnos');
     } catch (error) {
       if (error.name === 'ValidationError') {
-        console.log(error.inner)
         const newErrors = {};
         error.inner.forEach(err => {
           newErrors[err.path] = err.message;
         });
-        console.log(newErrors);
         setErrors(newErrors);
         return;
       }
-      // Manejar errores del backend o conexión
       setErrors({ server: error.response?.data?.message || 'Error de servidor' });
     }
   };

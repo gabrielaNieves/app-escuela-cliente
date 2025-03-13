@@ -12,7 +12,7 @@ import logo from "../assets/logo.png"
 
 const listaMenu = [
   {
-    titulo: 'Registrar',
+    titulo: 'Usuarios',
     icono:<BsPersonAdd className='h-6 w-6'/>,
     href:'registro'
 
